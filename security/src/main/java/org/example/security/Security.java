@@ -9,5 +9,9 @@ public class Security {
     public String getVersion() {
         return "0.1.0";
     }
+
+    public boolean validateToken(String token) {
+        return token != null && !token.isEmpty();
+    }
 }
 // Test change
