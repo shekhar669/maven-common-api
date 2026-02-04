@@ -2,16 +2,26 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "include-component-in-tag": true,
   "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "core",
+      "component": "core",
+      "separate-pull-requests": false,
+      "include-v-in-tag": true,
+      "extra-files": [
+        "version.txt",
+        "pom.xml"
+      ]
+    },
     "security": {
       "release-type": "simple",
       "package-name": "security",
       "component": "core",
       "separate-pull-requests": false,
+      "include-v-in-tag": true,
       "extra-files": [
-        "../version.txt",
-        "../pom.xml",
-        "version.txt",
-        "pom.xml"
+        "security/version.txt",
+        "security/pom.xml"
       ]
     },
     "services/service1": {
@@ -19,19 +29,26 @@
       "package-name": "service1",
       "component": "core",
       "separate-pull-requests": false,
+      "include-v-in-tag": true,
       "extra-files": [
-        "pom.xml",
-        "version.txt"
+        "services/service1/pom.xml",
+        "services/service1/version.txt"
       ]
     },
     "services/service2": {
       "release-type": "simple",
       "package-name": "service2",
       "separate-pull-requests": true,
+      "include-v-in-tag": true,
       "extra-files": [
-        "pom.xml",
-        "version.txt"
+        "services/service2/pom.xml",
+        "services/service2/version.txt"
       ]
     }
-  }
+  },
+  "changelog-sections": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "chore", "section": "Miscellaneous", "hidden": true}
+  ]
 }
