@@ -13,4 +13,4 @@ public class Service2 {
     public String getServiceInfo() {
         return "Service2 - Independent versioning";
     }
-}// Service2 test
+}
