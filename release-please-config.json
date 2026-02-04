@@ -8,10 +8,10 @@
       "component": "core",
       "separate-pull-requests": false,
       "extra-files": [
+        "../version.txt",
+        "../pom.xml",
         "version.txt",
-        "pom.xml",
-        "security/version.txt",
-        "security/pom.xml"
+        "pom.xml"
       ]
     },
     "services/service1": {
@@ -20,8 +20,8 @@
       "component": "core",
       "separate-pull-requests": false,
       "extra-files": [
-        "services/service1/pom.xml",
-        "services/service1/version.txt"
+        "pom.xml",
+        "version.txt"
       ]
     },
     "services/service2": {
@@ -29,8 +29,8 @@
       "package-name": "service2",
       "separate-pull-requests": true,
       "extra-files": [
-        "services/service2/pom.xml",
-        "services/service2/version.txt"
+        "pom.xml",
+        "version.txt"
       ]
     }
   }
