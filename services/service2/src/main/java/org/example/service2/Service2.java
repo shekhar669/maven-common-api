@@ -9,4 +9,8 @@ public class Service2 {
     public static void main(String[] args) {
         SpringApplication.run(Service2.class, args);
     }
+
+    public String getServiceInfo() {
+        return "Service2 - Independent versioning";
+    }
 }// Service2 test
