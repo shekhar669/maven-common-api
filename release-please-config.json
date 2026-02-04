@@ -1,25 +1,22 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "separate-pull-requests": false,
   "include-component-in-tag": true,
   "packages": {
     ".": {
       "release-type": "simple",
       "package-name": "maven-monorepo-example",
       "component": "core",
+      "separate-pull-requests": false,
       "extra-files": [
         "version.txt",
-        "pom.xml",
-        "security/version.txt",
-        "security/pom.xml",
-        "services/service1/pom.xml",
-        "services/service1/version.txt"
+        "pom.xml"
       ]
     },
     "security": {
       "release-type": "simple",
       "package-name": "security",
       "component": "core",
+      "separate-pull-requests": false,
       "extra-files": [
         "security/version.txt",
         "security/pom.xml"
@@ -29,6 +26,7 @@
       "release-type": "simple",
       "package-name": "service1",
       "component": "core",
+      "separate-pull-requests": false,
       "extra-files": [
         "services/service1/pom.xml",
         "services/service1/version.txt"
@@ -37,6 +35,7 @@
     "services/service2": {
       "release-type": "simple",
       "package-name": "service2",
+      "separate-pull-requests": true,
       "extra-files": [
         "services/service2/pom.xml",
         "services/service2/version.txt"
