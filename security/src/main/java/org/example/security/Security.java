@@ -13,5 +13,11 @@ public class Security {
     public boolean validateToken(String token) {
         return token != null && !token.isEmpty();
     }
+
+    public boolean isTokenExpired(String token) {
+        // TODO: Implement token expiration logic
+        return false;
+    }
 }
+
 // Test change
