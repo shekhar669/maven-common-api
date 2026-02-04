@@ -2,22 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "include-component-in-tag": true,
   "packages": {
-    ".": {
-      "release-type": "simple",
-      "package-name": "maven-monorepo-example",
-      "component": "core",
-      "separate-pull-requests": false,
-      "extra-files": [
-        "version.txt",
-        "pom.xml"
-      ]
-    },
     "security": {
       "release-type": "simple",
       "package-name": "security",
       "component": "core",
       "separate-pull-requests": false,
       "extra-files": [
+        "version.txt",
+        "pom.xml",
         "security/version.txt",
         "security/pom.xml"
       ]
