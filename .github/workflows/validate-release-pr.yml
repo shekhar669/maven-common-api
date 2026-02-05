@@ -1,0 +1,135 @@
+name: Validate Release PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate-release:
+    if: startsWith(github.head_ref, 'release-please--')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Validate conventional commits
+        id: validate-commits
+        run: |
+          echo "## 🔍 Validating Conventional Commits" >> $GITHUB_STEP_SUMMARY
+          
+          # Get all commits in the PR
+          commits=$(git log --format=%s origin/main..HEAD)
+          
+          valid_types="feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert"
+          valid_scopes="security|service1|service2"
+          invalid_commits=0
+          breaking_changes=0
+          
+          echo "### Commit Validation Results" >> $GITHUB_STEP_SUMMARY
+          
+          while IFS= read -r commit; do
+            # Check conventional commit format
+            if [[ $commit =~ ^($valid_types)(\(($valid_scopes)\))?!?:\ .+ ]]; then
+              echo "✅ $commit" >> $GITHUB_STEP_SUMMARY
+              
+              # Check for breaking changes
+              if [[ $commit =~ ^.+!: ]]; then
+                breaking_changes=$((breaking_changes + 1))
+                echo "⚠️  **BREAKING CHANGE detected**: $commit" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "❌ Invalid: $commit" >> $GITHUB_STEP_SUMMARY
+              invalid_commits=$((invalid_commits + 1))
+            fi
+          done <<< "$commits"
+          
+          echo "invalid_count=$invalid_commits" >> $GITHUB_OUTPUT
+          echo "breaking_count=$breaking_changes" >> $GITHUB_OUTPUT
+          
+          if [ $invalid_commits -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **$invalid_commits invalid commit(s) found**" >> $GITHUB_STEP_SUMMARY
+            echo "Expected format: type(scope): description" >> $GITHUB_STEP_SUMMARY
+            echo "Valid types: $valid_types" >> $GITHUB_STEP_SUMMARY
+            echo "Valid scopes: $valid_scopes" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          
+          if [ $breaking_changes -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️  **$breaking_changes breaking change(s) detected - Major version bump required**" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "✅ All commits follow conventional commit format" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Validate component scope
+        run: |
+          echo "## 🏷️ Validating Component Scopes" >> $GITHUB_STEP_SUMMARY
+          
+          commits=$(git log --format=%s origin/main..HEAD)
+          missing_scope=0
+          
+          while IFS= read -r commit; do
+            # Skip chore commits (they can be without scope)
+            if [[ $commit =~ ^chore: ]]; then
+              continue
+            fi
+            
+            # Check if commit has a scope
+            if [[ ! $commit =~ \(.+\) ]]; then
+              echo "⚠️  Missing scope: $commit" >> $GITHUB_STEP_SUMMARY
+              missing_scope=$((missing_scope + 1))
+            fi
+          done <<< "$commits"
+          
+          if [ $missing_scope -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️  **$missing_scope commit(s) missing component scope**" >> $GITHUB_STEP_SUMMARY
+            echo "Consider adding scope for better changelog organization" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All commits have proper component scopes" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Notify reviewers
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            let component = 'unknown';
+            let reviewers = [];
+            
+            // Determine component from branch
+            if (branch.includes('core')) {
+              component = 'Core (Parent + Security + Service1)';
+              reviewers = ['@core-team', '@security-team'];
+            } else if (branch.includes('service2')) {
+              component = 'Service2';
+              reviewers = ['@service2-team'];
+            }
+            
+            const breaking = '${{ steps.validate-commits.outputs.breaking_count }}';
+            const breakingWarning = breaking > 0 
+              ? '\n\n⚠️ **WARNING: This release contains breaking changes (Major version bump)**\n' 
+              : '';
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🔔 **Release PR Ready for Review**\n\n` +
+                    `**Component:** ${component}\n` +
+                    `**Reviewers:** ${reviewers.join(', ')}\n` +
+                    breakingWarning +
+                    `\nPlease review the version bumps, changelog, and updated files before merging.`
+            });
+            
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['release', 'needs-review']
+            });

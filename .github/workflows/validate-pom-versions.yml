@@ -1,0 +1,123 @@
+name: Validate POM Versions
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**/pom.xml'
+      - '**/version.txt'
+
+jobs:
+  validate-versions:
+    if: startsWith(github.head_ref, 'release-please--')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - name: Validate version consistency
+        run: |
+          echo "## 📦 Validating Version Consistency" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract versions from files
+          root_pom_version=$(grep -m 1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          root_version_txt=$(cat version.txt)
+          
+          security_pom_version=$(grep -m 1 '<version>' security/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          security_version_txt=$(cat security/version.txt)
+          
+          service1_pom_version=$(grep -m 1 '<version>' services/service1/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          service1_version_txt=$(cat services/service1/version.txt)
+          
+          service2_pom_version=$(grep -m 1 '<version>' services/service2/pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          service2_version_txt=$(cat services/service2/version.txt)
+          
+          echo "### Version Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | pom.xml | version.txt | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|---------|-------------|--------|" >> $GITHUB_STEP_SUMMARY
+          
+          errors=0
+          
+          # Validate root
+          if [ "$root_pom_version" = "$root_version_txt" ]; then
+            echo "| Root (Parent) | $root_pom_version | $root_version_txt | ✅ |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Root (Parent) | $root_pom_version | $root_version_txt | ❌ Mismatch |" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          fi
+          
+          # Validate security
+          if [ "$security_pom_version" = "$security_version_txt" ]; then
+            echo "| Security | $security_pom_version | $security_version_txt | ✅ |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Security | $security_pom_version | $security_version_txt | ❌ Mismatch |" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          fi
+          
+          # Validate service1
+          if [ "$service1_pom_version" = "$service1_version_txt" ]; then
+            echo "| Service1 | $service1_pom_version | $service1_version_txt | ✅ |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Service1 | $service1_pom_version | $service1_version_txt | ❌ Mismatch |" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          fi
+          
+          # Validate service2
+          if [ "$service2_pom_version" = "$service2_version_txt" ]; then
+            echo "| Service2 | $service2_pom_version | $service2_version_txt | ✅ |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Service2 | $service2_pom_version | $service2_version_txt | ❌ Mismatch |" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          fi
+          
+          # Check core component version alignment
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Core Component Alignment" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$root_pom_version" = "$security_pom_version" ] && [ "$root_pom_version" = "$service1_pom_version" ]; then
+            echo "✅ **Core components (Parent + Security + Service1) have aligned versions: $root_pom_version**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Core components have misaligned versions:**" >> $GITHUB_STEP_SUMMARY
+            echo "- Parent: $root_pom_version" >> $GITHUB_STEP_SUMMARY
+            echo "- Security: $security_pom_version" >> $GITHUB_STEP_SUMMARY
+            echo "- Service1: $service1_pom_version" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          fi
+          
+          # Check for SNAPSHOT versions
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Readiness" >> $GITHUB_STEP_SUMMARY
+          
+          if echo "$root_pom_version $security_pom_version $service1_pom_version $service2_pom_version" | grep -q "SNAPSHOT"; then
+            echo "⚠️  **WARNING: SNAPSHOT versions detected - not suitable for production release**" >> $GITHUB_STEP_SUMMARY
+            errors=$((errors + 1))
+          else
+            echo "✅ No SNAPSHOT versions - ready for release" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ $errors -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Validation failed with $errors error(s)**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **All version validations passed**" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Validate Maven build
+        run: |
+          echo "## 🔨 Validating Maven Build" >> $GITHUB_STEP_SUMMARY
+          
+          if mvn -B clean verify -DskipTests; then
+            echo "✅ Maven build successful" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Maven build failed" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

@@ -1,0 +1,12 @@
+# Release configuration requires release team approval
+/.release-please-manifest.json @release-team
+/release-please-config.json @release-team
+
+# Core component releases (parent pom, security, service1)
+/pom.xml @core-team
+/version.txt @core-team
+/security/** @core-team @security-team
+/services/service1/** @core-team @service1-team
+
+# Service2 releases
+/services/service2/** @service2-team
