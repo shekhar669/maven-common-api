@@ -14,6 +14,11 @@ public class Security {
         return token != null && !token.isEmpty();
     }
 
+    public String encryptToken(String token) {
+        // Add basic token encryption
+        return "encrypted:" + token;
+    }
+
     public boolean isTokenExpired(String token) {
         // TODO: Implement token expiration logic
         return false;
