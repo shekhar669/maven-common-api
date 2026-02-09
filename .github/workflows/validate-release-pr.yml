@@ -31,6 +31,18 @@ jobs:
           echo "### Commit Validation Results" >> $GITHUB_STEP_SUMMARY
           
           while IFS= read -r commit; do
+            # Skip merge commits
+            if [[ $commit =~ ^Merge ]]; then
+              echo "⏭️  Skipped (merge commit): $commit" >> $GITHUB_STEP_SUMMARY
+              continue
+            fi
+            
+            # Skip release-please automated commits
+            if [[ $commit =~ ^chore\(main\):\ release ]]; then
+              echo "⏭️  Skipped (release-please): $commit" >> $GITHUB_STEP_SUMMARY
+              continue
+            fi
+            
             # Check conventional commit format
             if [[ $commit =~ ^($valid_types)(\(($valid_scopes)\))?!?:\ .+ ]]; then
               echo "✅ $commit" >> $GITHUB_STEP_SUMMARY
