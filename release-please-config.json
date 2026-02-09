@@ -3,45 +3,41 @@
   "include-component-in-tag": true,
   "packages": {
     ".": {
-      "release-type": "simple",
+      "release-type": "maven",
       "package-name": "core",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        "version.txt",
-        "pom.xml"
+        "version.txt"
       ]
     },
     "security": {
-      "release-type": "simple",
+      "release-type": "maven",
       "package-name": "security",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        "security/version.txt",
-        "security/pom.xml"
+        "security/version.txt"
       ]
     },
     "services/service1": {
-      "release-type": "simple",
+      "release-type": "maven",
       "package-name": "service1",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        "services/service1/pom.xml",
         "services/service1/version.txt"
       ]
     },
     "services/service2": {
-      "release-type": "simple",
+      "release-type": "maven",
       "package-name": "service2",
       "separate-pull-requests": true,
       "include-v-in-tag": true,
       "extra-files": [
-        "services/service2/pom.xml",
         "services/service2/version.txt"
       ]
     }
