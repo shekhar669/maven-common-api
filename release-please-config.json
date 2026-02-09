@@ -10,9 +10,9 @@
       "include-v-in-tag": true,
       "extra-files": [
         {
-          "type": "xml",
+          "type": "generic",
           "path": "pom.xml",
-          "xpath": "/project/version"
+          "glob": false
         },
         "version.txt"
       ]
@@ -25,9 +25,9 @@
       "include-v-in-tag": true,
       "extra-files": [
         {
-          "type": "xml",
+          "type": "generic",
           "path": "security/pom.xml",
-          "xpath": "/project/version"
+          "glob": false
         },
         "security/version.txt"
       ]
@@ -40,9 +40,9 @@
       "include-v-in-tag": true,
       "extra-files": [
         {
-          "type": "xml",
+          "type": "generic",
           "path": "services/service1/pom.xml",
-          "xpath": "/project/version"
+          "glob": false
         },
         "services/service1/version.txt"
       ]
@@ -54,9 +54,9 @@
       "include-v-in-tag": true,
       "extra-files": [
         {
-          "type": "xml",
+          "type": "generic",
           "path": "services/service2/pom.xml",
-          "xpath": "/project/version"
+          "glob": false
         },
         "services/service2/version.txt"
       ]
