@@ -1,6 +1,6 @@
 {
-  ".": "0.2.0",
-  "security": "0.2.0",
-  "services/service1": "0.2.0",
+  ".": "0.2.1",
+  "security": "0.2.1",
+  "services/service1": "0.2.1",
   "services/service2": "0.2.0"
 }
