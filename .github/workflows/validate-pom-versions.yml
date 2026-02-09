@@ -3,9 +3,6 @@ name: Validate POM Versions
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - '**/pom.xml'
-      - '**/version.txt'
 
 jobs:
   validate-versions:
