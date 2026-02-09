@@ -1,0 +1,136 @@
+name: Sync POM Versions After Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.release-please-manifest.json'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-pom-versions:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Read versions from manifest
+        id: read-versions
+        run: |
+          echo "## 📋 Reading Release Versions" >> $GITHUB_STEP_SUMMARY
+          
+          # Read versions from manifest
+          core_version=$(jq -r '."."' .release-please-manifest.json)
+          security_version=$(jq -r '.security' .release-please-manifest.json)
+          service1_version=$(jq -r '."services/service1"' .release-please-manifest.json)
+          service2_version=$(jq -r '."services/service2"' .release-please-manifest.json)
+          
+          echo "core_version=$core_version" >> $GITHUB_OUTPUT
+          echo "security_version=$security_version" >> $GITHUB_OUTPUT
+          echo "service1_version=$service1_version" >> $GITHUB_OUTPUT
+          echo "service2_version=$service2_version" >> $GITHUB_OUTPUT
+          
+          echo "| Component | Version |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Core (Parent) | $core_version |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | $security_version |" >> $GITHUB_STEP_SUMMARY
+          echo "| Service1 | $service1_version |" >> $GITHUB_STEP_SUMMARY
+          echo "| Service2 | $service2_version |" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Check which component was released
+        id: detect-release
+        run: |
+          # Get the previous manifest from the commit before
+          git show HEAD~1:.release-please-manifest.json > prev-manifest.json || echo '{}' > prev-manifest.json
+          
+          prev_core=$(jq -r '."."' prev-manifest.json)
+          curr_core=$(jq -r '."."' .release-please-manifest.json)
+          
+          prev_service2=$(jq -r '."services/service2"' prev-manifest.json)
+          curr_service2=$(jq -r '."services/service2"' .release-please-manifest.json)
+          
+          echo "## 🔍 Detecting Release Type" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$prev_core" != "$curr_core" ]; then
+            echo "release_type=core" >> $GITHUB_OUTPUT
+            echo "✅ **Core release detected**: $prev_core → $curr_core" >> $GITHUB_STEP_SUMMARY
+          elif [ "$prev_service2" != "$curr_service2" ]; then
+            echo "release_type=service2" >> $GITHUB_OUTPUT
+            echo "✅ **Service2 release detected**: $prev_service2 → $curr_service2" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "release_type=none" >> $GITHUB_OUTPUT
+            echo "ℹ️  No version changes detected" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Update POM versions
+        if: steps.detect-release.outputs.release_type != 'none'
+        run: |
+          echo "## 📝 Updating POM Files" >> $GITHUB_STEP_SUMMARY
+          
+          release_type="${{ steps.detect-release.outputs.release_type }}"
+          
+          if [ "$release_type" = "core" ]; then
+            # Update core components (parent, security, service1)
+            core_version="${{ steps.read-versions.outputs.core_version }}"
+            
+            echo "Updating core components to version $core_version" >> $GITHUB_STEP_SUMMARY
+            
+            # Update root pom.xml
+            sed -i "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>$core_version<\/version>/" pom.xml
+            echo "✅ Updated pom.xml" >> $GITHUB_STEP_SUMMARY
+            
+            # Update security pom.xml
+            sed -i "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>$core_version<\/version>/" security/pom.xml
+            echo "✅ Updated security/pom.xml" >> $GITHUB_STEP_SUMMARY
+            
+            # Update service1 pom.xml
+            sed -i "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>$core_version<\/version>/" services/service1/pom.xml
+            echo "✅ Updated services/service1/pom.xml" >> $GITHUB_STEP_SUMMARY
+            
+          elif [ "$release_type" = "service2" ]; then
+            # Update only service2
+            service2_version="${{ steps.read-versions.outputs.service2_version }}"
+            
+            echo "Updating service2 to version $service2_version" >> $GITHUB_STEP_SUMMARY
+            
+            # Update service2 pom.xml
+            sed -i "0,/<version>.*<\/version>/s/<version>.*<\/version>/<version>$service2_version<\/version>/" services/service2/pom.xml
+            echo "✅ Updated services/service2/pom.xml" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No POM files needed updating" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "## 📊 Files Modified" >> $GITHUB_STEP_SUMMARY
+            git diff --name-only >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Commit and push changes
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          release_type="${{ steps.detect-release.outputs.release_type }}"
+          
+          if [ "$release_type" = "core" ]; then
+            version="${{ steps.read-versions.outputs.core_version }}"
+            git commit -am "chore: sync core pom.xml versions to $version [skip ci]"
+          elif [ "$release_type" = "service2" ]; then
+            version="${{ steps.read-versions.outputs.service2_version }}"
+            git commit -am "chore: sync service2 pom.xml version to $version [skip ci]"
+          fi
+          
+          git push
+          
+          echo "✅ **Changes committed and pushed to main**" >> $GITHUB_STEP_SUMMARY
