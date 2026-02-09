@@ -2,5 +2,5 @@
   ".": "0.1.0",
   "security": "0.1.0",
   "services/service1": "0.1.0",
-  "services/service2": "0.1.0"
+  "services/service2": "0.2.0"
 }
