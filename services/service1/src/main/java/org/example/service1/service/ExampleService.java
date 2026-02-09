@@ -7,4 +7,8 @@ public class ExampleService {
   public void someMethod(){
     System.out.println("hello final r rr r3");
   }
+
+  public String getServiceName() {
+    return "ExampleService";
+  }
 }
