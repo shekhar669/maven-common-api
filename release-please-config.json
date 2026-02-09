@@ -9,12 +9,8 @@
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        {
-          "type": "generic",
-          "path": "pom.xml",
-          "glob": false
-        },
-        "version.txt"
+        "version.txt",
+        "pom.xml"
       ]
     },
     "security": {
@@ -24,12 +20,8 @@
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        {
-          "type": "generic",
-          "path": "security/pom.xml",
-          "glob": false
-        },
-        "security/version.txt"
+        "security/version.txt",
+        "security/pom.xml"
       ]
     },
     "services/service1": {
@@ -39,12 +31,8 @@
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        {
-          "type": "generic",
-          "path": "services/service1/pom.xml",
-          "glob": false
-        },
-        "services/service1/version.txt"
+        "services/service1/version.txt",
+        "services/service1/pom.xml"
       ]
     },
     "services/service2": {
@@ -53,12 +41,8 @@
       "separate-pull-requests": true,
       "include-v-in-tag": true,
       "extra-files": [
-        {
-          "type": "generic",
-          "path": "services/service2/pom.xml",
-          "glob": false
-        },
-        "services/service2/version.txt"
+        "services/service2/version.txt",
+        "services/service2/pom.xml"
       ]
     }
   },
