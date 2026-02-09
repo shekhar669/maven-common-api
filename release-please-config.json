@@ -3,41 +3,61 @@
   "include-component-in-tag": true,
   "packages": {
     ".": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "core",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
+        {
+          "type": "xml",
+          "path": "pom.xml",
+          "xpath": "/project/version"
+        },
         "version.txt"
       ]
     },
     "security": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "security",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
+        {
+          "type": "xml",
+          "path": "security/pom.xml",
+          "xpath": "/project/version"
+        },
         "security/version.txt"
       ]
     },
     "services/service1": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "service1",
       "component": "core",
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
+        {
+          "type": "xml",
+          "path": "services/service1/pom.xml",
+          "xpath": "/project/version"
+        },
         "services/service1/version.txt"
       ]
     },
     "services/service2": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "service2",
       "separate-pull-requests": true,
       "include-v-in-tag": true,
       "extra-files": [
+        {
+          "type": "xml",
+          "path": "services/service2/pom.xml",
+          "xpath": "/project/version"
+        },
         "services/service2/version.txt"
       ]
     }
