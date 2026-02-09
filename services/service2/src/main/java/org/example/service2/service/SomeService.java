@@ -7,4 +7,9 @@ public class SomeService {
    public void someMethod(){
     System.out.println("hello final ");
   }
+
+  public String processData(String data) {
+    // New data processing feature
+    return data.toUpperCase();
+  }
 }
