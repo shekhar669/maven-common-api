@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.0](https://github.com/shekhar669/maven-common-api/compare/core-v0.3.0...core-v1.0.0) (2026-02-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* JDK upgrade from 17 to 21
+* JDK upgrade from 17 to 21
+
+### Features
+
+* JDK upgrade from 17 to 21 ([23c3ec7](https://github.com/shekhar669/maven-common-api/commit/23c3ec79611ba06c53139ef4ec30c98294f13a26))
+* JDK upgrade from 17 to 21 ([23c3ec7](https://github.com/shekhar669/maven-common-api/commit/23c3ec79611ba06c53139ef4ec30c98294f13a26))
+* log message correction ([98a2351](https://github.com/shekhar669/maven-common-api/commit/98a23518a5b16fed0c6ee0d15a976f62d04f4bda))
+* **service1:** log message correction ([b7da826](https://github.com/shekhar669/maven-common-api/commit/b7da826ab662b50cbb886d06adc51208d78ff8ad))
+* **service1:** log message correction ([b7da826](https://github.com/shekhar669/maven-common-api/commit/b7da826ab662b50cbb886d06adc51208d78ff8ad))
+* **service1:** log message correction ([98a2351](https://github.com/shekhar669/maven-common-api/commit/98a23518a5b16fed0c6ee0d15a976f62d04f4bda))
+
 ## [0.3.0](https://github.com/shekhar669/maven-common-api/compare/core-v0.2.1...core-v0.3.0) (2026-02-09)
 
 
