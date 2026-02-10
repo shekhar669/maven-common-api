@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExampleService {
   public void someMethod(){
-    System.out.println("hello final r rr r3");
+    System.out.println("hello final minor feature");
   }
 
   public String getServiceName() {
