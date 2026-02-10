@@ -3,7 +3,7 @@
   "include-component-in-tag": true,
   "packages": {
     ".": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "core",
       "component": "core",
       "separate-pull-requests": false,
@@ -15,8 +15,18 @@
           "glob": false
         },
         {
+          "type": "pom-xml",
+          "path": "pom.xml",
+          "glob": false
+        },
+        {
           "type": "generic",
           "path": "security/version.txt",
+          "glob": false
+        },
+        {
+          "type": "pom-xml",
+          "path": "security/pom.xml",
           "glob": false
         },
         {
@@ -25,19 +35,14 @@
           "glob": false
         },
         {
-          "type": "generic",
-          "path": "security/CHANGELOG.md",
-          "glob": false
-        },
-        {
-          "type": "generic",
-          "path": "services/service1/CHANGELOG.md",
+          "type": "pom-xml",
+          "path": "services/service1/pom.xml",
           "glob": false
         }
       ]
     },
     "services/service2": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "service2",
       "component": "service2",
       "separate-pull-requests": true,
@@ -46,6 +51,11 @@
         {
           "type": "generic",
           "path": "services/service2/version.txt",
+          "glob": false
+        },
+        {
+          "type": "pom-xml",
+          "path": "services/service2/pom.xml",
           "glob": false
         }
       ]
