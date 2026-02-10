@@ -9,9 +9,31 @@
       "separate-pull-requests": false,
       "include-v-in-tag": true,
       "extra-files": [
-        "version.txt",
-        "security/version.txt",
-        "services/service1/version.txt"
+        {
+          "type": "generic",
+          "path": "version.txt",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "security/version.txt",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "services/service1/version.txt",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "security/CHANGELOG.md",
+          "glob": false
+        },
+        {
+          "type": "generic",
+          "path": "services/service1/CHANGELOG.md",
+          "glob": false
+        }
       ]
     },
     "services/service2": {
@@ -21,7 +43,11 @@
       "separate-pull-requests": true,
       "include-v-in-tag": true,
       "extra-files": [
-        "services/service2/version.txt"
+        {
+          "type": "generic",
+          "path": "services/service2/version.txt",
+          "glob": false
+        }
       ]
     }
   },
