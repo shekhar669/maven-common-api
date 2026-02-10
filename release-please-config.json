@@ -10,27 +10,9 @@
       "include-v-in-tag": true,
       "extra-files": [
         "version.txt",
-        "pom.xml"
-      ]
-    },
-    "security": {
-      "release-type": "simple",
-      "package-name": "security",
-      "component": "core",
-      "separate-pull-requests": false,
-      "include-v-in-tag": true,
-      "extra-files": [
+        "pom.xml",
         "security/version.txt",
-        "security/pom.xml"
-      ]
-    },
-    "services/service1": {
-      "release-type": "simple",
-      "package-name": "service1",
-      "component": "core",
-      "separate-pull-requests": false,
-      "include-v-in-tag": true,
-      "extra-files": [
+        "security/pom.xml",
         "services/service1/version.txt",
         "services/service1/pom.xml"
       ]
@@ -38,6 +20,7 @@
     "services/service2": {
       "release-type": "simple",
       "package-name": "service2",
+      "component": "service2",
       "separate-pull-requests": true,
       "include-v-in-tag": true,
       "extra-files": [
