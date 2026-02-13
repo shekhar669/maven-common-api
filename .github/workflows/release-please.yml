@@ -7,39 +7,48 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          # Use GitHub token for authentication
           token: ${{ secrets.GITHUB_TOKEN }}
-      
-      # Manual approval step - only runs when releases are created
-      - name: Wait for Release Approval
-        if: ${{ steps.release.outputs.releases_created }}
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: shekhar669
-          minimum-approvals: 1
-          issue-title: "Release Approval Required"
-          issue-body: |
-            ## Release Approval Request
-            
-            **Releases Created:** ${{ steps.release.outputs.releases_created }}
-            
-            A new release has been created. Please review the release and approve by commenting **approved** on this issue.
-            To deny, comment **denied**.
-            
-            [View Releases](https://github.com/${{ github.repository }}/releases)
-            
-            **Release Details:**
-            ```json
-            ${{ toJSON(steps.release.outputs) }}
-            ```
-          exclude-workflow-initiator-as-approver: false
+  
+  # Approval step using GitHub Environments
+  publish:
+    needs: release
+    if: ${{ needs.release.outputs.releases_created }}
+    runs-on: ubuntu-latest
+    environment: production  # This triggers manual approval
+    steps:
+      - name: Release Published
+        run: |
+          echo "✅ Release has been approved and published!"
+          echo "View releases at: https://github.com/${{ github.repository }}/releases"
+
+  # DEPRECATED: Old manual-approval approach (commented out)
+  # release-old:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: googleapis/release-please-action@v4
+  #       id: release
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #     
+  #     - name: Wait for Release Approval
+  #       if: ${{ steps.release.outputs.releases_created }}
+  #       uses: trstringer/manual-approval@v1
+  #       with:
+  #         secret: ${{ secrets.GITHUB_TOKEN }}
+  #         approvers: shekhar669
+  #         minimum-approvals: 1
+  #         issue-title: "Release Approval Required"
+  #         issue-body: |
+  #           ## Release Approval Request
+  #           Please review and comment "approved" to proceed
+  #         exclude-workflow-initiator-as-approver: false
