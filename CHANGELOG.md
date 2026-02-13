@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.0.0](https://github.com/shekhar669/maven-common-api/compare/core-v0.3.0...core-v1.0.0) (2026-02-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* JDK upgrade from 17 to 21
+* JDK upgrade from 17 to 21
+
+### Features
+
+* add build workflow on release PR merge and fix SNAPSHOT versions ([d4c8fa9](https://github.com/shekhar669/maven-common-api/commit/d4c8fa909b731bebb0554d003042cd889cbcff60))
+* add manual approval for release creation ([702d82a](https://github.com/shekhar669/maven-common-api/commit/702d82a7112fdac47414b6b5de3df659df183c53))
+* JDK upgrade from 17 to 21 ([23c3ec7](https://github.com/shekhar669/maven-common-api/commit/23c3ec79611ba06c53139ef4ec30c98294f13a26))
+* JDK upgrade from 17 to 21 ([23c3ec7](https://github.com/shekhar669/maven-common-api/commit/23c3ec79611ba06c53139ef4ec30c98294f13a26))
+* log message correction ([98a2351](https://github.com/shekhar669/maven-common-api/commit/98a23518a5b16fed0c6ee0d15a976f62d04f4bda))
+* **service1:** log message correction ([b7da826](https://github.com/shekhar669/maven-common-api/commit/b7da826ab662b50cbb886d06adc51208d78ff8ad))
+* **service1:** log message correction ([b7da826](https://github.com/shekhar669/maven-common-api/commit/b7da826ab662b50cbb886d06adc51208d78ff8ad))
+* **service1:** log message correction ([98a2351](https://github.com/shekhar669/maven-common-api/commit/98a23518a5b16fed0c6ee0d15a976f62d04f4bda))
+* use GitHub Environments for release approval ([2af818f](https://github.com/shekhar669/maven-common-api/commit/2af818f967683d6cc5dd433f6cb0397fb400abac))
+
+
+### Bug Fixes
+
+* update approval issue to show all release outputs ([65fc844](https://github.com/shekhar669/maven-common-api/commit/65fc844369f8f78231b7612774b558ee4717b090))
+* use simple release-type to avoid SNAPSHOT versions ([4145a81](https://github.com/shekhar669/maven-common-api/commit/4145a818ecdbade99be651abb3ab41d12ba03529))
+* use simple string paths for extra-files ([c8d34f9](https://github.com/shekhar669/maven-common-api/commit/c8d34f915c2aab94de425245be743dee64c1c9c8))
+
 ## [0.3.0](https://github.com/shekhar669/maven-common-api/compare/core-v0.2.1...core-v0.3.0) (2026-02-09)
 
 
