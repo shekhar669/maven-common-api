@@ -27,15 +27,19 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: shekhar669
           minimum-approvals: 1
-          issue-title: "Release Approval Required: ${{ steps.release.outputs.tag_name }}"
+          issue-title: "Release Approval Required"
           issue-body: |
             ## Release Approval Request
             
-            **Tag:** ${{ steps.release.outputs.tag_name }}
-            **Release Created:** Yes
+            **Releases Created:** ${{ steps.release.outputs.releases_created }}
             
-            Please review the release notes and approve by commenting **approved** on this issue.
+            A new release has been created. Please review the release and approve by commenting **approved** on this issue.
             To deny, comment **denied**.
             
-            [View Release PR](https://github.com/${{ github.repository }}/releases)
+            [View Releases](https://github.com/${{ github.repository }}/releases)
+            
+            **Release Details:**
+            ```json
+            ${{ toJSON(steps.release.outputs) }}
+            ```
           exclude-workflow-initiator-as-approver: false
