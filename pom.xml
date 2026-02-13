@@ -9,7 +9,6 @@
    <modules>
     <module>security</module>
     <module>services/service1</module>
-    <module>services/service2</module>
   </modules>
 
     <packaging>pom</packaging>
