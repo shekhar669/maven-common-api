@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/shekhar669/maven-common-api/compare/core-v1.1.0...core-v1.2.0) (2026-02-13)
+
+
+### Features
+
+* exclude service2 from unified release build ([f2730a8](https://github.com/shekhar669/maven-common-api/commit/f2730a86f8ada26d34a8ff746aafb2062b348ae3))
+
 ## [1.1.0](https://github.com/shekhar669/maven-common-api/compare/core-v1.0.0...core-v1.1.0) (2026-02-13)
 
 
