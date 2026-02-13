@@ -23,11 +23,11 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       
-      - name: Build all modules
-        run: mvn clean verify -DskipTests
-      
-      - name: Package all modules
-        run: mvn package -DskipTests
+      - name: Build and install all modules
+        run: |
+          # Install builds all modules and installs them to local Maven repo
+          # This allows service1 to find the security dependency
+          mvn clean install -DskipTests
       
       - name: List built artifacts
         run: |
