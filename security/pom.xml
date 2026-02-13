@@ -3,9 +3,15 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
+  <parent>
+    <groupId>org.example</groupId>
+    <artifactId>maven-monorepo-example</artifactId>
+    <version>0.3.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
   <artifactId>security</artifactId>
-  <version>0.3.0</version>
+  <!-- Version inherited from parent -->
   <packaging>jar</packaging>
 
   <properties>
