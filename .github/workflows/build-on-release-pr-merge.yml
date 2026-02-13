@@ -1,0 +1,67 @@
+name: Build on Release PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build-if-release:
+    # Only run if PR was merged and is a release PR
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-please--')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Build all modules
+        run: mvn clean verify -DskipTests
+      
+      - name: Package all modules
+        run: mvn package -DskipTests
+      
+      - name: List built artifacts
+        run: |
+          echo "=== Built JAR files ==="
+          find . -name "*.jar" -type f | grep target | grep -v "\.m2"
+          
+          echo ""
+          echo "=== Verifying unified versioning ==="
+          echo "Parent version: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "Security version: $(mvn -pl security help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "Service1 version: $(mvn -pl services/service1 help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "Service2 version: $(mvn -pl services/service2 help:evaluate -Dexpression=project.version -q -DforceStdout)"
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-jars
+          path: |
+            **/target/*.jar
+            !**/target/*-javadoc.jar
+            !**/target/*-sources.jar
+          retention-days: 30
+      
+      - name: Create build summary
+        run: |
+          echo "## Build Summary 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Versions" >> $GITHUB_STEP_SUMMARY
+          echo "- Parent: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_STEP_SUMMARY
+          echo "- Security: $(mvn -pl security help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_STEP_SUMMARY
+          echo "- Service1: $(mvn -pl services/service1 help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_STEP_SUMMARY
+          echo "- Service2: $(mvn -pl services/service2 help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          find . -name "*.jar" -type f | grep target | grep -v "\.m2" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
