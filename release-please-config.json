@@ -3,12 +3,15 @@
   "include-component-in-tag": true,
   "packages": {
     ".": {
-      "release-type": "maven",
+      "release-type": "simple",
       "package-name": "core",
       "component": "core",
       "include-v-in-tag": true,
       "extra-files": [
         "version.txt",
+        "pom.xml",
+        "security/pom.xml",
+        "services/service1/pom.xml",
         "security/version.txt",
         "services/service1/version.txt"
       ]
