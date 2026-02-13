@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/shekhar669/maven-common-api/compare/core-v1.0.0...core-v1.1.0) (2026-02-13)
+
+
+### Features
+
+* add build workflow and fix dependency resolution ([525c270](https://github.com/shekhar669/maven-common-api/commit/525c270c91926f8456c68610cb60f573bd7f5c06))
+
 ## [1.0.0](https://github.com/shekhar669/maven-common-api/compare/core-v0.3.0...core-v1.0.0) (2026-02-13)
 
 
